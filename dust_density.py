@@ -12,6 +12,7 @@ class DustConc():
         xpos = data[:,0]
         ypos = data[:,1]
         zpos = data[:,2]
+        mass = data[:,3]
         dens = data[:,5]
         energy = data[:,9]
 
@@ -25,8 +26,11 @@ class DustConc():
         dustdens = dens[data[:,-1]==2]
         gasenergy = energy[data[:,-1]==1]
 
-        #normalise dust to gas ratio to 0.01
-        self.normcoeff = 0.01/np.true_divide(np.sum(dustdens), np.sum(gasdens))
+        self.G = 6.672041e-8
+        self.umass = 1.99e33
+        self.udist = 1.50e13
+        self.utime = np.sqrt((self.udist**3)/(self.G*self.umass))
+        self.uergg = self.udist**2/(self.utime**2)
 
         self.gas = np.array(zip(gasx,gasy,gasz,gasdens,gasenergy))
         self.dust = np.array(zip(dustx,dusty,dustz,dustdens))
@@ -35,9 +39,9 @@ class DustConc():
         self.rout = 50
         self.thetaslice = [np.radians(0), np.radians(2)]
 
+        self.gasmass = mass[data[:,-1]==1][0]*self.umass
         self.gamma = 5./3.
         self.graindens = 3.0 #g/cm^3
-        self.G = 6.672041e-8
         self.mstar = 1.0
         print('NOTE: The stellar mass used is %.2f' %self.mstar)
 
@@ -46,7 +50,7 @@ class DustConc():
     def runAnalysis(self):
         self.getThetaSlice()
         self.dusttogasRadial(nbins=50,plot=True)
-        #self.stokesRadial(nbins=50,plot=True)
+        self.stokesRadial(nbins=50,plot=True)
 
     def getThetaSlice(self):
         gastheta = np.arctan2(self.gas[:,1], self.gas[:,0])
@@ -68,6 +72,10 @@ class DustConc():
     def dusttogasRadial(self,nbins,plot=False):
         bins = np.linspace(self.rin,self.rout,nbins)
 
+        #normalise dust to gas ratio to 0.01
+        normcoeff = 0.01/np.true_divide(np.sum(self.dust[:,3]),
+                                        np.sum(self.gas[:,3]))
+
         dusttogas=[]
 
         for i in range(1,len(bins)):
@@ -78,7 +86,7 @@ class DustConc():
                                         (self.dustrinslice<=bins[i]), 3]
             dustdens = np.sum(dustdens)
 
-            dusttogas.append(self.normcoeff*np.true_divide(dustdens, gasdens))
+            dusttogas.append(normcoeff*np.true_divide(dustdens, gasdens))
 
         if plot:
             plt.plot(bins[1:],dusttogas)
@@ -90,32 +98,36 @@ class DustConc():
     def stokesRadial(self, nbins, plot=False):
         bins = np.linspace(self.rin,self.rout,nbins)
 
+        mstar = self.mstar*self.umass
+
         stokesarr=[]
         epsilonarr=[]
 
         for i in range(1,len(bins)):
             gasenergy = self.gasinslice[(self.gasrinslice>bins[i-1]) &
                                         (self.gasrinslice<=bins[i]), 4]
+            gasenergy = gasenergy*self.uergg
 
             spsound = np.sqrt(self.gamma*(self.gamma-1)*gasenergy)
-            spsound = np.mean(spsound)
+            spsound = np.max(spsound)
 
             radius = self.gasrinslice[(self.gasrinslice>bins[i-1]) &
                                       (self.gasrinslice<=bins[i])]
             radius = np.mean(radius)
+            radius = radius*self.udist
 
-            omega = np.sqrt(self.G*self.mstar/radius**3)
-            omega = np.mean(omega)
+            omega = np.sqrt(self.G*mstar/radius**3)
 
             gasdens = self.gasinslice[(self.gasrinslice>bins[i-1]) &
                                       (self.gasrinslice<=bins[i]), 3]
-            gasdens = np.sum(gasdens)
+            gasdens = np.max(gasdens)
+            gasdens = gasdens*self.umass/self.udist**3
 
             stokesnum = self.grainsize*self.graindens*omega/gasdens/spsound
             stokesarr.append(stokesnum)
 
             epsilon = 1. + 2.*10./(stokesnum + 1./stokesnum) - stokesnum/200.
-            epsilonarr.append(epsilon)           
+            epsilonarr.append(epsilon)
 
         if plot:
             plt.plot(bins[1:],stokesarr)
