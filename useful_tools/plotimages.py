@@ -3,8 +3,13 @@ import matplotlib.gridspec as gridspec
 import matplotlib.image as img
 import os
 import numpy as np
+import argparse
 
-freq = 127
+parser = argparse.ArgumentParser()
+parser.add_argument('-freq','--freq')
+args = parser.parse_args()
+freq = str(args.freq)
+
 nfolders = 30
 matrix = [6,5]
 
@@ -24,7 +29,7 @@ folders = folders[[14, 26, 8, 20, 2,
 images=[]
 for i, folder in enumerate(folders):
     try:
-       images.append(img.imread('%s/IMAGE_%sGHz.eps' %(folder,freq)))
+       images.append(img.imread('%s/FINALIMAGE_%sGHz.eps' %(folder,freq)))
     except:
        images.append('noimage')
 
@@ -75,5 +80,5 @@ plt.subplot(gs1[25]).set_ylabel(r'$a_{\rm max}=a_{\rm frag}$' '\n'
                                 r'$(v_{\rm frag}={\rm 30ms^{-1}})$', rotation=90, fontsize=11)
 
 plt.tight_layout()
-plt.savefig('oggallery%s.eps'%str(freq))
+plt.savefig('gallery%s.eps'%str(freq))
 plt.show()
