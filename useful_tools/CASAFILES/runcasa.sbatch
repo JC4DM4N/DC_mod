@@ -4,13 +4,13 @@
 # OpenMP cannot request more than one node, and no more than the number of
 # cores on the largest node, currently 64, but less for most nodes
 #SBATCH -N 1
-#SBATCH -n 30
+#SBATCH -n 54
 
 #SBATCH --mem=4G
 
 #SBATCH --job-name=casa
 
-#SBATCH --array=1-30
+#SBATCH --array=1-54
 #SBATCH --output=casalog%a.out
 
 ###SBATCH -o casa.log
@@ -21,7 +21,7 @@
 #SBATCH -t 12:00:00
 
 # The work directory
-cd /disk01/cadman/phantom_runs/torus_runs/SA_CASA
+cd /disk01/cadman/DC_mod/SA_runs
 
 folderid=$SLURM_ARRAY_TASK_ID
 i=1

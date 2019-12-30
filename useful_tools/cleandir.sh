@@ -3,6 +3,10 @@
 for folder in *amax*
 do
   cd $folder
+  if test -f stokes.dat
+  then
+    rm stokes.dat
+  fi
 
   i=0
   #remove initial grid file.
