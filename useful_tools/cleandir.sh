@@ -8,6 +8,11 @@ do
     rm stokes.dat
   fi
 
+  if test -f casa-*.log
+  then
+    rm casa-*.log
+  fi
+
   i=0
   #remove initial grid file.
   #then only keep the final 2 lucy grid files.

@@ -70,7 +70,7 @@ print " "
 print " "
 
 imgage=f.show_contour(str,levels=contours,colors="white")
-f.show_colorscale(cmap="gist_heat",vmin=0.0,vmax=1.0)
+f.show_colorscale(cmap="gist_heat",vmin=0.0,vmax=0.1)
 
 #f.add_colorbar()
 #f.colorbar.show()
