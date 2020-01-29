@@ -80,9 +80,9 @@ plt.subplot(gs1[0]).set_ylabel(r'$a_{\rm max}=10 {\rm \mu}$m', rotation=90, font
 plt.subplot(gs1[9]).set_ylabel(r'$a_{\rm max}=1$mm', rotation=90, fontsize=11)
 plt.subplot(gs1[18]).set_ylabel(r'$a_{\rm max}=10$cm', rotation=90, fontsize=11)
 plt.subplot(gs1[27]).set_ylabel(r'$a_{\rm max}=100$cm', rotation=90, fontsize=11)
-plt.subplot(gs1[36]).set_ylabel(r'$a_{\rm max}=a_{\rm frag}$' '\n' 
+plt.subplot(gs1[36]).set_ylabel(r'$a_{\rm max} \approx 1$mm' '\n' 
                                 r'$(v_{\rm frag}={\rm 10ms^{-1}})$', rotation=90, fontsize=11)
-plt.subplot(gs1[45]).set_ylabel(r'$a_{\rm max}=a_{\rm frag}$' '\n' 
+plt.subplot(gs1[45]).set_ylabel(r'$a_{\rm max} \approx 1$cm' '\n' 
                                 r'$(v_{\rm frag}={\rm 30ms^{-1}})$', rotation=90, fontsize=11)
 
 plt.tight_layout()
