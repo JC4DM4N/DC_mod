@@ -2,6 +2,7 @@
 --------
 Script to plot disc properties in Phantom discs. Calculates peak dust fraction
    in spiral arms of discs.
+NOT USED ANYMORE IN THE PAPER
 --------
 """
 

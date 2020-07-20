@@ -1,3 +1,7 @@
+"""
+Plot galleries for the appedix
+"""
+
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.image as img
@@ -13,13 +17,15 @@ freq = str(args.freq)
 nfolders = 54
 matrix = [6,9]
 
-folders = np.array(os.listdir('.'))
+folders = np.array(os.listdir('../SA_runs_empty/.'))
 folders = folders[folders.argsort()]
+#dpn't plot amax=high images
+folders = np.array([x for x in folders if 'high' not in x])
+folders = np.array([x for x in folders if '.log' not in x])
 #remove anything which isn't a folder
 folders = folders[:nfolders]
 
 #reorder folders
-
 folders = folders[[26,8,38,50,20,2,32,44,14,
                    27,9,39,51,21,3,33,45,15,
                    25,7,37,49,19,1,31,43,13,
@@ -30,7 +36,7 @@ folders = folders[[26,8,38,50,20,2,32,44,14,
 images=[]
 for i, folder in enumerate(folders):
     try:
-       im = img.imread('%s/FINALIMAGE_%sGHz.eps' %(folder,freq))
+       im = img.imread('../SA_runs_empty/%s/FINALIMAGE_%sGHz.eps' %(folder,freq))
        images.append(im)
     except:
        images.append('noimage')
@@ -52,7 +58,7 @@ plt.tight_layout()
 plt.show()
 
 #f, axarr = plt.subplots(matrix[1],matrix[0],figsize=(10,10),squeeze=True,sharex=True,sharey=True)
-plt.figure(figsize=(15,15))
+plt.figure(figsize=(15,10))
 gs1 = gridspec.GridSpec(6,9)
 gs1.update(wspace=0, hspace=0)
 for i, image in enumerate(images):
@@ -86,5 +92,5 @@ plt.subplot(gs1[45]).set_ylabel(r'$a_{\rm max} \approx 1$cm' '\n'
                                 r'$(v_{\rm frag}={\rm 30ms^{-1}})$', rotation=90, fontsize=11)
 
 plt.tight_layout()
-plt.savefig('gallery%s.eps'%str(freq))
+#plt.savefig('../SA_runs2/gallery%s.eps'%str(freq))
 plt.show()

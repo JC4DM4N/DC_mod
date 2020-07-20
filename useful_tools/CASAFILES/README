@@ -1,0 +1,4 @@
+Files for use with CASA (Common Astronomy Software Application) package.
+
+These scripts will take torus output fits files and generate synthetic ALMA
+obervations from them.
